@@ -100,7 +100,7 @@
     <main class="container">
         <header class="header">
             <h1>🏐 Transfer Portal Stats Lookup</h1>
-            <p>Search the current player database through the Python API.</p>
+            <p>Search the current player database.</p>
             <div class="stats-summary" id="statsSummary">
                 <div class="stat-box"><div class="number" id="totalPlayers">0</div><div class="label">Total Players</div></div>
                 <div class="stat-box"><div class="number" id="foundPlayers">0</div><div class="label">Found</div></div>
@@ -125,7 +125,7 @@
             <section class="results-section" id="resultsSection">
                 <h2>Results</h2>
                 <div class="legend">
-                    <div class="legend-item"><div class="legend-box found"></div><span>Found by API</span></div>
+                    <div class="legend-item"><div class="legend-box found"></div><span>Found</span></div>
                     <div class="legend-item"><div class="legend-box not-found-box"></div><span>Not Found</span></div>
                 </div>
                 <div class="button-group" style="margin-bottom:20px">
@@ -151,7 +151,157 @@
     </main>
 
     <script>
-        const API_URL = "/api/search";
+        // Player search runs in the browser (ported from server.py) so the page can be
+        // hosted as a static site, e.g. GitHub Pages.
+        const DATA_FILE = "data/all_players.csv";
+        const HISTORY_FILE = "data/player_history.csv";
+
+        function normalizeName(value) {
+            return String(value ?? "")
+                .normalize("NFKD")
+                .replace(/[^\x00-\x7F]/g, "")
+                .toLowerCase()
+                .replaceAll("-", " ")
+                .replace(/[^a-z ]/g, " ")
+                .split(" ")
+                .filter(Boolean)
+                .join(" ");
+        }
+
+        function number(value) {
+            const text = String(value ?? "").trim();
+            if (!text) return -1;
+            const parsed = Number(text);
+            return Number.isNaN(parsed) ? -1 : parsed;
+        }
+
+        function parseCSV(text) {
+            if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+            const rows = [];
+            let row = [], field = "", inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i];
+                if (inQuotes) {
+                    if (ch === '"') {
+                        if (text[i + 1] === '"') { field += '"'; i++; }
+                        else inQuotes = false;
+                    } else field += ch;
+                } else if (ch === '"') inQuotes = true;
+                else if (ch === ",") { row.push(field); field = ""; }
+                else if (ch === "\n" || ch === "\r") {
+                    if (ch === "\r" && text[i + 1] === "\n") i++;
+                    row.push(field); rows.push(row); row = []; field = "";
+                } else field += ch;
+            }
+            if (field || row.length) { row.push(field); rows.push(row); }
+            const header = rows.shift() || [];
+            return {
+                columns: header,
+                records: rows.filter(cells => cells.some(Boolean))
+                    .map(cells => Object.fromEntries(header.map((name, i) => [name, cells[i] ?? ""])))
+            };
+        }
+
+        function groupByName(records) {
+            const byName = new Map();
+            for (const row of records) {
+                const key = normalizeName(row.Player);
+                if (!byName.has(key)) byName.set(key, []);
+                byName.get(key).push(row);
+            }
+            return byName;
+        }
+
+        let dataPromise = null;
+        function loadData() {
+            dataPromise ??= Promise.all([DATA_FILE, HISTORY_FILE].map(async path => {
+                const response = await fetch(path, { cache: "no-cache" });
+                if (!response.ok) throw new Error(`Could not load ${path} (${response.status})`);
+                return parseCSV(await response.text());
+            })).then(([players, history]) => {
+                const byName = groupByName(players.records);
+                const nameLengths = [...new Set([...byName.keys()]
+                    .map(name => name.split(" ").length).filter(length => length >= 2))]
+                    .sort((a, b) => b - a);
+                return { byName, nameLengths, historyByName: groupByName(history.records) };
+            }).catch(error => { dataPromise = null; throw error; });
+            return dataPromise;
+        }
+
+        function searchPlayer(data, name) {
+            const key = normalizeName(name);
+            let matches = data.byName.get(key) || [];
+            if (!matches.length) {
+                const parts = key.split(" ").filter(Boolean);
+                if (parts.length >= 2) {
+                    const first = parts[0], last = parts.at(-1);
+                    const candidates = [];
+                    for (const [candidateName, rows] of data.byName) {
+                        const words = candidateName.split(" ");
+                        if (words.includes(first) && words.includes(last)) candidates.push(...rows);
+                    }
+                    if (candidates.length === 1) matches = candidates;
+                }
+            }
+            if (!matches.length) return null;
+            return matches.reduce((best, row) => {
+                const a = [number(row.Sets), number(row.Matches)];
+                const b = [number(best.Sets), number(best.Matches)];
+                return a[0] > b[0] || (a[0] === b[0] && a[1] > b[1]) ? row : best;
+            });
+        }
+
+        function yearsPlayed(data, playerName, currentTeam) {
+            let records = data.historyByName.get(normalizeName(playerName)) || [];
+            if (!records.length) return null;
+            const teamsBySeason = new Map();
+            for (const row of records) {
+                const season = row.Season ?? "";
+                if (!teamsBySeason.has(season)) teamsBySeason.set(season, new Set());
+                teamsBySeason.get(season).add(normalizeName(row.Team));
+            }
+            if ([...teamsBySeason.values()].some(teams => teams.size > 1)) {
+                const teamKey = normalizeName(currentTeam);
+                records = records.filter(row => normalizeName(row.Team) === teamKey);
+            }
+            return new Set(records.map(row => row.Season).filter(Boolean)).size || null;
+        }
+
+        function extractNames(data, text) {
+            const found = [];
+            const seen = new Set();
+            for (const sourceLine of text.split(/\r\n|[\n\r\v\f\x1c\x1d\x1e\x85\u{2028}\u{2029}]/u)) {
+                const words = normalizeName(sourceLine).split(" ").filter(Boolean);
+                let index = 0;
+                while (index < words.length) {
+                    let match = null;
+                    for (const length of data.nameLengths) {
+                        if (index + length > words.length) continue;
+                        const candidate = words.slice(index, index + length).join(" ");
+                        if (data.byName.has(candidate)) { match = candidate; break; }
+                    }
+                    if (match) {
+                        if (!seen.has(match)) {
+                            const player = searchPlayer(data, match);
+                            found.push({ query: player.Player || match, source_line: sourceLine, player });
+                            seen.add(match);
+                        }
+                        index += match.split(" ").length;
+                    } else index += 1;
+                }
+            }
+            return found;
+        }
+
+        async function searchText(text) {
+            const data = await loadData();
+            return extractNames(data, text).map(item => ({
+                ...item,
+                found: true,
+                years_played: yearsPlayed(data, item.player.Player, item.player.Team)
+            }));
+        }
+
         const CSV_HEADERS = ["#", "Player Name", "Pos", "Roster Seasons Found", "Previous Team", "Leaving From", "Conference", "Season", "Matches", "Sets", "Kills", "Atk Err", "Atk", "Hit %", "Assists", "Aces", "Serv Err", "Digs", "Total Blk", "Solo Blk", "Blk Ast", "Blk Err", "BH Err", "PTS", "Hometown", "High School"];
         let resultsData = [];
 
@@ -199,13 +349,7 @@
             setStatus("Detecting player names and searching current stats…");
 
             try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ text: pastedText })
-                });
-                const payload = await response.json();
-                if (!response.ok) throw new Error(payload.error || `API returned ${response.status}`);
+                const payload = { results: await searchText(pastedText) };
 
                 if (!payload.results.length) {
                     resultsData = [];
