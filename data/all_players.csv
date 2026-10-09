@@ -283,7 +283,7 @@ TOPSAIL BEACH, N.C.",
 2026,Maggie Beauer,OH,Pepperdine,16,60,168,73,403,0.236,9,0,0,35,48,1,47,1,0,192.5,"Chandler, Ariz.",Corona del Sol
 2026,Claire Little Chambers,OH,BYU,13,48,161,37,380,0.326,15,13,10,93,37,0,37,1,0,192.5,,
 2026,Taylor Cripe,OH,Central Mich.,17,53,173,102,560,0.127,12,11,22,130,12,4,8,1,1,192.0,,
-2026,Kitana Tuufuli,OH,UIW,14,55,179,73,493,0.215,4,0,0,40,18,8,10,1,0,192.0,"St. Hedwig, Texas",Steele HS
+2026,Kitana Tuufuli,OH,UIW,14,55,179,73,493,0.215,4,0,0,40,18,8,10,1,0,192.0,,
 2026,Shayla Meyer,OH,Ole Miss,14,54,169,68,459,0.220,15,11,9,92,23,1,22,1,0,192.0,,
 2026,Riley Imamura,OH,Dartmouth,13,51,164,67,434,0.224,15,13,29,119,29,1,28,3,0,192.0,,
 2026,Abby Cunningham,OH,ULM,17,62,173,87,464,0.185,7,2,6,57,30,3,27,3,0,191.5,"Carencro, La.",Westminster Christian Academy
@@ -855,7 +855,7 @@ NASHVILLE, TENN.",
 2026,Jessica Pickett,MH,Valparaiso,16,64,105,23,228,0.360,3,0,0,16,52,8,44,5,0,135.0,,
 2026,Juliette Myrick,S,Army West Point,15,53,106,30,274,0.277,337,18,12,161,20,2,18,2,1,135.0,"St. Louis, Mo.",Eureka
 2026,Sydney Schnichels,OH,Michigan,15,50,110,48,303,0.205,10,13,35,85,21,3,18,3,0,135.0,"Willmar, Minn.",
-2026,Vanessa Eregie,MB,UIW,14,55,113,24,267,0.333,2,1,5,32,34,8,26,1,0,135.0,"Katy, Texas",James E. Taylor HS
+2026,Vanessa Eregie,MB,UIW,14,55,113,24,267,0.333,2,1,5,32,34,8,26,1,0,135.0,,
 2026,Wiktoria Jakubik,OH,Tennessee St.,13,43,118,53,342,0.190,3,3,10,42,24,4,20,2,1,135.0,"Grajewo, Poland",
 2026,Sophia Krichev,MB,UT Arlington,10,38,104,27,222,0.347,2,3,13,11,48,8,40,2,0,135.0,"Huntsville, Alabama",Huntsville High School
 2026,Anisa Dorlouis,S,Presbyterian,17,63,107,47,304,0.197,461,12,32,201,27,4,23,3,6,134.5,"Gainesville, Fla.",
@@ -913,7 +913,7 @@ CHENEY, KAN.",
 2026,Gracie Campbell,OH,East Texas A&M,12,48,118,45,394,0.185,4,7,11,49,9,1,8,1,0,130.0,"Spring, Texas",Klein Oak HS
 2026,Kelly Kinney,OH,Minnesota,12,42,122,44,307,0.254,0,0,0,8,16,0,16,0,0,130.0,"HOMETOWN
 WEST PALM BEACH, FLA.",
-2026,Hannah Crowe,MB,UTEP,17,64,85,34,182,0.280,5,7,20,18,67,8,59,4,1,129.5,"Dillon, Colorado",Summit HS
+2026,Hannah Crowe,MB,UTEP,17,64,85,34,182,0.280,5,7,20,18,67,8,59,4,1,129.5,,
 2026,Lily Burnett,OH,Murray St.,16,58,90,36,277,0.195,5,13,16,39,45,8,37,4,0,129.5,,
 2026,Zoe McDonald,MB,Butler,16,50,87,28,211,0.280,1,9,20,24,54,13,41,4,0,129.5,"Prairie Village, Kan.",Shawnee Mission East
 2026,Carly Mueller,MB,UT Martin,15,50,106,37,250,0.276,0,0,4,14,41,6,35,4,0,129.5,"Hendersonville, Tenn.",Beech HS
@@ -945,7 +945,7 @@ WEST PALM BEACH, FLA.",
 2026,Stephanie Gutierrez,MB,Rice,16,54,97,26,224,0.317,6,6,12,32,46,3,43,10,0,127.5,"Fort Worth, Texas",
 2026,Ella Schomer,OPP,Oakland,16,52,110,46,335,0.191,4,3,1,45,28,1,27,7,0,127.5,"Clarkston, Mich.",Marian High School
 2026,Helen Wilford,MB,Bowling Green,15,58,77,27,181,0.276,3,2,5,15,82,15,67,5,1,127.5,"Greenville, N.C.",
-2026,Calissa Allison,S,UIW,14,54,102,54,302,0.159,341,12,16,140,25,2,23,2,1,127.5,"Pflugerville, Texas",Concordia High School
+2026,Calissa Allison,S,UIW,14,54,102,54,302,0.159,341,12,16,140,25,2,23,2,1,127.5,,
 2026,Ava Harrington,MB,Princeton,11,40,95,31,250,0.256,1,17,27,49,28,3,25,2,0,127.5,"Houston, Texas / Episcopal",
 2026,Damisi Osibodu,MB,Stony Brook,16,59,75,34,189,0.217,13,0,2,13,92,12,80,5,0,127.0,"Katy, Texas",Jordan
 2026,Annamaria Ramos,OH,Air Force,15,51,111,21,377,0.239,4,7,8,95,14,4,10,1,0,127.0,"Henderson, Nev.",
@@ -1156,7 +1156,7 @@ OLATHE, KS",
 2026,Henley Anderson,OH,Texas,12,45,91,62,312,0.093,6,5,20,40,33,3,30,8,0,114.0,"Dripping Springs, Texas",Dripping Springs
 2026,Nyakuak Lual,MB,LSU New Orleans,18,59,74,41,198,0.167,3,7,22,15,51,14,37,19,0,113.5,"Grand Island, Neb.",
 2026,Cheyenne Green,OH,Oregon St.,15,52,100,58,311,0.135,0,6,4,28,13,2,11,3,1,113.5,"Pleasant Hill, Ore.",Pleasant Hill HS
-2026,Sofia Grimm,OPP,UIW,14,54,77,28,196,0.250,7,13,10,35,40,7,33,3,0,113.5,"Houston, Texas",Cypress Creek HS
+2026,Sofia Grimm,OPP,UIW,14,54,77,28,196,0.250,7,13,10,35,40,7,33,3,0,113.5,,
 2026,Reece Rhoads,OH,Winthrop,12,46,104,51,316,0.168,0,3,1,24,10,3,7,1,0,113.5,"Cumming, GA",West Forsyth H.S.
 2026,Kayla Nwabueze,MB,Harvard,11,41,100,37,274,0.230,10,4,7,46,18,1,17,0,0,113.5,"Bloomfield Hills, Mich.",International Academy Okma
 2026,Grace Troxell,RS,ULM,17,58,101,40,340,0.179,2,1,6,61,19,3,16,1,0,113.0,"Indianapolis, Ind.",Roncalli HS
@@ -1515,7 +1515,7 @@ TOPEKA, KAN.",
 2026,Lyric Edwards,MB,Alabama St.,16,55,72,35,203,0.182,2,0,0,14,30,3,27,6,0,88.5,"DeSoto, Texas",DeSoto HS
 2026,Maddie Herman,MB,Eastern Mich.,16,55,66,19,168,0.280,4,0,0,7,43,2,41,1,0,88.5,,
 2026,Amalia Simmons,MB,Rice,15,39,76,42,239,0.142,0,0,0,24,22,3,19,2,0,88.5,"Pittsburgh, Pennsylvania",
-2026,Ava Hewitt,MB,San Jose St.,14,47,59,24,145,0.241,0,2,2,9,41,14,27,3,0,88.5,,
+2026,Ava Hewitt,MB,San Jose St.,14,47,59,24,145,0.241,0,2,2,9,41,14,27,3,0,88.5,"Los Angeles, Calif.",
 2026,Katy Wessels,MB,Washington,13,45,60,23,152,0.243,1,0,0,9,54,3,51,3,0,88.5,"Lewiston, Idaho",Lewiston
 2026,Pola Bujnarowska,MB,Long Beach St.,12,44,59,15,135,0.326,1,0,2,10,50,9,41,5,0,88.5,"Torun, Poland",
 2026,Jaela Auguste,MB,Wisconsin,10,31,73,20,142,0.373,0,0,0,5,27,4,23,4,0,88.5,"Spring, Texas",Grand Oaks High School
@@ -1609,7 +1609,7 @@ TOPEKA, KAN.",
 2026,Alexa Hernandez,S,Green Bay,15,62,51,12,119,0.328,611,18,36,133,27,0,27,1,0,82.5,"Green Bay, Wis.",Green Bay Southwest
 2026,Allie Caldwell,MB,UC Davis,15,58,56,14,146,0.288,6,0,0,21,46,7,39,6,0,82.5,"San Carlos, Calif.",Sequoia
 2026,Reese Robins,MB,TCU,15,46,69,25,145,0.303,0,1,1,15,22,3,19,0,0,82.5,"Mansfield, Texas",Timberview HS
-2026,Alex Beauchamp,OH,UIW,14,46,77,52,352,0.071,5,1,3,31,6,3,3,1,0,82.5,"Austin, Texas",Vandergrift HS
+2026,Alex Beauchamp,OH,UIW,14,46,77,52,352,0.071,5,1,3,31,6,3,3,1,0,82.5,,
 2026,Kaylee Parker,OH,Memphis,13,49,58,21,156,0.237,1,0,0,8,45,4,41,1,0,82.5,"Cypress, Texas",
 2026,Nia Curry,OH,Coppin St.,11,40,72,35,219,0.169,1,8,15,36,4,1,3,0,0,82.5,"Chandler, Ariz.",Hamilton HS
 2026,Alissa Grant,MB,UMBC,9,37,55,26,123,0.236,2,0,0,3,50,5,45,3,1,82.5,"Minneola, Fla.",Lake Minneola
@@ -1854,7 +1854,7 @@ POTOMAC, MD.",
 2026,Kadence Goolsby,RS,Niagara,13,42,61,30,205,0.151,2,0,0,17,14,0,14,1,1,68.0,,
 2026,Makenzie Miller,MB,Evansville,12,37,48,18,140,0.214,3,5,4,7,24,6,18,1,0,68.0,"Kansas City, Mo.",
 2026,Karlyn Frazier,MB,Central Ark.,12,35,47,25,111,0.198,2,0,0,6,35,7,28,0,0,68.0,"Breckenridge, Colo.",Summit HS
-2026,Lilly Roach,MB,UIW,9,29,60,25,146,0.240,2,0,0,15,14,2,12,1,0,68.0,"Elmhurst, Ill",York High School
+2026,Lilly Roach,MB,UIW,9,29,60,25,146,0.240,2,0,0,15,14,2,12,1,0,68.0,,
 2026,Kayla Dunlap,MB,Vanderbilt,8,24,55,10,90,0.500,0,0,0,3,24,2,22,1,0,68.0,,
 2026,Emma DiRocco,MB,Old Dominion,15,55,47,23,133,0.180,1,0,0,7,36,5,31,3,0,67.5,,
 2026,Selana Morales,OH,Texas Southern,14,40,61,38,201,0.114,1,2,6,25,7,2,5,0,0,67.5,"DuPont, Wash.",
@@ -2397,7 +2397,7 @@ ZIONSVILLE, IND.",
 2026,Emma MacFerran,MB,ETSU,10,31,31,21,91,0.110,1,0,0,3,14,2,12,1,1,39.0,"Bartlett, Tenn.",
 2026,Kyla Coffey,RS,Queens (NC),10,27,32,20,103,0.117,2,2,8,21,10,0,10,1,0,39.0,"Richmond, Va.",Collegiate HS
 2026,Reese Resmer,MB,Kansas St.,10,23,26,11,58,0.259,0,0,1,2,21,5,16,1,0,39.0,"Noblesville, Ind.",Noblesville
-2026,Gabby Fish,OPP,UIW,9,27,33,19,138,0.101,0,0,0,18,10,2,8,1,0,39.0,"Plymouth, Minn.",Wayzata HS
+2026,Gabby Fish,OPP,UIW,9,27,33,19,138,0.101,0,0,0,18,10,2,8,1,0,39.0,,
 2026,Haylee Brown,OH,San Diego St.,9,22,37,18,101,0.188,0,0,0,4,4,0,4,0,0,39.0,"Maricopa, Ariz.",Maricopa HS
 2026,Marin Collins,OH,Georgia,8,21,29,23,88,0.068,5,7,8,30,5,1,4,1,0,39.0,"Lake View, N.Y.",
 2026,Riley Malloy,OH,Southern California,8,19,23,13,73,0.137,0,7,13,14,18,0,18,2,0,39.0,"Austin, Texas",Austin HS
@@ -3412,7 +3412,7 @@ GURABO, PR",
 2026,Avery Pruitt,DS,Sam Houston,15,50,0,0,2,0.000,5,14,5,20,0,0,0,0,0,14.0,"Fulshear, Texas",Fulshear HS
 2026,Kira Devrieze,L/DS,Morgan St.,15,49,2,0,5,0.400,5,12,16,52,0,0,0,0,0,14.0,"Chapel Hill, N.C.",Chapel Hill HS
 2026,Eve Adams,OH,Buffalo,15,46,0,0,1,0.000,4,14,11,18,0,0,0,0,0,14.0,"Cattaragus, N.Y.",Randolph
-2026,Ashton Rogers,L,UIW,14,55,1,1,18,0.000,57,13,21,259,0,0,0,0,0,14.0,"Bakersfield, Calif.",Liberty HS
+2026,Ashton Rogers,L,UIW,14,55,1,1,18,0.000,57,13,21,259,0,0,0,0,0,14.0,,
 2026,Victoria Leyva,L/DS,Hawaii,14,53,0,1,4,-0.250,59,14,17,210,0,0,0,0,0,14.0,"El Paso, Texas",Pebble Hills HS
 2026,Kate Schroetlin,L,Omaha,14,53,5,1,9,0.444,27,9,20,184,0,0,0,0,0,14.0,"Loveland, Colo.",Loveland
 2026,Makena Lim,L/DS,Tulane,14,52,1,1,4,0.000,32,13,34,161,0,0,0,0,0,14.0,,
@@ -3858,7 +3858,7 @@ DOWNINGTOWN, PA.",
 2026,Dillyn Griffin,L/DS,UC San Diego,14,55,1,0,5,0.200,26,8,9,99,0,0,0,1,0,9.0,"Foothill Ranch, Calif.",Santa Margarita Catholic HS
 2026,Paige Sentes,L/DS,CSUN,14,55,1,2,7,-0.143,51,8,18,222,0,0,0,0,1,9.0,"Bakersfield, Calif.",Liberty HS
 2026,Jayda Gray,L,Delaware,14,53,0,2,9,-0.222,6,9,18,97,0,0,0,0,0,9.0,"Mechanicsburg, Penn.",
-2026,Victoria Hall,S,UIW,14,53,3,0,17,0.176,198,6,9,104,0,0,0,0,0,9.0,"Metamora, Ill.",Metamora Township HS
+2026,Victoria Hall,S,UIW,14,53,3,0,17,0.176,198,6,9,104,0,0,0,0,0,9.0,,
 2026,Jan Marie Duhaylungsod,S,CSUN,14,52,2,0,6,0.333,145,7,13,70,0,0,0,0,0,9.0,"North Las Vegas, Nev.",Rancho HS
 2026,Kaitlyn Owens,S,Marist,14,51,0,0,1,0.000,6,9,10,18,0,0,0,0,0,9.0,"Ashburn, VA",Broad Run
 2026,Nil Kayaalp,L,Hofstra,14,50,3,0,6,0.500,55,6,3,198,0,0,0,0,0,9.0,"Nilüfer, Bursa, Turkey",Okyanus Koleji
@@ -5679,7 +5679,7 @@ MADISON, WISC.",
 2026,Alex Acevedo,OH,Minnesota,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"HOMETOWN
 NAMPA, IDAHO",
 2026,Stella Adeyemi,OH,Notre Dame,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,,
-2026,Taylor Bahnub,MH,Texas Tech,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,,
+2026,Taylor Bahnub,MH,Texas Tech,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"Dublin, Ohio",
 2026,Tatiana Besu,MH,Gardner-Webb,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"Miramar, Fla.",West Broward HS
 2026,Bennett Boulo,S,Southern Miss.,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"Mobile, Ala.",
 2026,Olivia Brewster,MB,Lafayette,1,4,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"San Rafael, Calif.",Terra Linda
@@ -5867,7 +5867,7 @@ MANASSAS, VA.",
 2026,Amanda Mack,OH,Holy Cross,1,1,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"Bradenton, Fla.",IMG Academy
 2026,Elliott Mickelberry,MB,Cincinnati,1,1,0,0,0,--,0,0,1,0,0,0,0,0,0,0.0,,
 2026,Viena Moliis,OH,New Mexico,1,1,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,,
-2026,Jadyn Molina,OH,UIW,1,1,0,0,1,0.000,0,0,0,0,0,0,0,0,0,0.0,"San Antonio, Texas",Cornerstone Christian Academy
+2026,Jadyn Molina,OH,UIW,1,1,0,0,1,0.000,0,0,0,0,0,0,0,0,0,0.0,,
 2026,Teagan Ng,OH,Youngstown St.,1,1,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"Sunbury, Ohio",Big Walnut
 2026,Nil Ozer,MB,UAlbany,1,1,0,0,0,--,0,0,0,0,0,0,0,0,0,0.0,"Istanbul, Turkey",Okyanus
 2026,Zaria Queen,OPP,Stanford,1,1,0,0,0,--,0,0,1,1,0,0,0,0,0,0.0,"Honolulu, Hawaii",Moanalua
