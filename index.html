@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Portal Stats Lookup</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            padding: 20px;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,.3);
+        }
+        .header {
+            padding: 30px;
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .header h1 { margin-bottom: 8px; font-size: 28px; }
+        .header p { opacity: .9; }
+        .stats-summary {
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stat-box { min-width: 130px; padding: 15px 25px; border-radius: 8px; background: rgba(255,255,255,.2); }
+        .stat-box .number { font-size: 32px; font-weight: 700; }
+        .stat-box .label { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+        .content { padding: 30px; }
+        label { display: block; margin-bottom: 10px; font-size: 14px; font-weight: 700; }
+        textarea {
+            width: 100%;
+            min-height: 170px;
+            padding: 15px;
+            resize: vertical;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font: 14px/1.5 inherit;
+        }
+        textarea:focus { border-color: #667eea; outline: 3px solid rgba(102,126,234,.16); }
+        .help-text { margin-top: 8px; color: #6b7280; font-size: 12px; }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        button {
+            padding: 12px 24px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        button:disabled { cursor: wait; opacity: .65; }
+        .btn-primary { flex: 1; color: white; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .btn-secondary { color: #333; background: #f3f4f6; }
+        #status { min-height: 24px; margin-top: 14px; font-size: 14px; }
+        #status.error { color: #b91c1c; }
+        #status.success { color: #047857; }
+        .results-section { display: none; margin-top: 30px; }
+        .results-section.active { display: block; }
+        .legend { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; padding: 15px; border-radius: 8px; background: #f8f9fa; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+        .legend-box { width: 20px; height: 20px; border-radius: 4px; }
+        .found { background: #d4edda; }
+        .not-found-box { background: #ffeaa7; }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead { position: sticky; top: 0; z-index: 1; background: #f8f9fa; }
+        th { padding: 12px 10px; white-space: nowrap; border-bottom: 2px solid #dee2e6; text-align: left; font-size: 12px; }
+        td { padding: 10px; border-bottom: 1px solid #e9ecef; }
+        tbody tr:hover { background: #f8f9fa; }
+        tbody tr.not-found { background: #fff3cd; }
+        .player-name { white-space: nowrap; font-weight: 700; }
+        .position { display: inline-block; padding: 3px 7px; border-radius: 4px; color: white; background: #667eea; font-size: 10px; font-weight: 700; }
+        .stat-cell { color: #667eea; text-align: center; font-weight: 700; }
+        .arrow { color: #9ca3af; text-align: center; }
+        .new-team { color: #059669; font-weight: 700; }
+        a { color: #667eea; font-weight: 700; text-decoration: none; }
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .container { border-radius: 0; }
+            .content, .header { padding: 20px; }
+            .button-group { flex-direction: column; }
+            .btn-primary, .btn-secondary { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>🏐 Transfer Portal Stats Lookup</h1>
+            <p>Search the current player database through the Python API.</p>
+            <div class="stats-summary" id="statsSummary">
+                <div class="stat-box"><div class="number" id="totalPlayers">0</div><div class="label">Total Players</div></div>
+                <div class="stat-box"><div class="number" id="foundPlayers">0</div><div class="label">Found</div></div>
+                <div class="stat-box"><div class="number" id="notFoundPlayers">0</div><div class="label">Not Found</div></div>
+            </div>
+        </header>
+
+        <section class="content">
+            <div class="input-section">
+                <label for="playerInput">Paste Player Names or Transfer Portal Rows</label>
+                <textarea id="playerInput" placeholder="Paste the copied NCAA table, transfer portal rows, or player names here..."></textarea>
+                <div class="help-text">
+                    Paste the complete copied NCAA block. Known player names are detected anywhere in each row; tab-separated institution and conference fields are retained when available.
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" id="processButton" type="button">🔍 Search Players</button>
+                    <button class="btn-secondary" id="clearButton" type="button">Clear</button>
+                </div>
+                <p id="status" role="status" aria-live="polite"></p>
+            </div>
+
+            <section class="results-section" id="resultsSection">
+                <h2>Results</h2>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-box found"></div><span>Found by API</span></div>
+                    <div class="legend-item"><div class="legend-box not-found-box"></div><span>Not Found</span></div>
+                </div>
+                <div class="button-group" style="margin-bottom:20px">
+                    <button class="btn-primary" id="exportButton" type="button">📥 Export to CSV</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Player Name</th><th>Pos</th><th>Roster Seasons Found</th>
+                                <th>Previous Team</th><th></th><th>Leaving From</th><th>Conference</th>
+                                <th>Season</th><th>Matches</th><th>Sets</th><th>Kills</th><th>Atk Err</th><th>Atk</th>
+                                <th>Hit %</th><th>Assists</th><th>Aces</th><th>Serv Err</th><th>Digs</th>
+                                <th>Total Blk</th><th>Solo Blk</th><th>Blk Ast</th><th>Blk Err</th><th>BH Err</th>
+                                <th>PTS</th><th>Hometown</th><th>High School</th><th>Link</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const API_URL = "/api/search";
+        const CSV_HEADERS = ["#", "Player Name", "Pos", "Roster Seasons Found", "Previous Team", "Leaving From", "Conference", "Season", "Matches", "Sets", "Kills", "Atk Err", "Atk", "Hit %", "Assists", "Aces", "Serv Err", "Digs", "Total Blk", "Solo Blk", "Blk Ast", "Blk Err", "BH Err", "PTS", "Hometown", "High School"];
+        let resultsData = [];
+
+        const input = document.getElementById("playerInput");
+        const processButton = document.getElementById("processButton");
+        const clearButton = document.getElementById("clearButton");
+        const exportButton = document.getElementById("exportButton");
+        const status = document.getElementById("status");
+
+        function setStatus(message, type = "") {
+            status.textContent = message;
+            status.className = type;
+        }
+
+        function parseInputLine(line, matchedName) {
+            const rawColumns = line.split("\t").map(value => value.trim());
+            const columns = rawColumns.filter(Boolean);
+            const sportIndex = columns.findIndex(value => /volleyball|women's/i.test(value));
+            return {
+                fullName: matchedName,
+                newInstitution: sportIndex > 0 ? columns[sportIndex - 1] : "",
+                conference: sportIndex >= 0 ? (columns.at(-1) || "") : ""
+            };
+        }
+
+        function value(player, column, fallback = "N/A") {
+            const result = player?.[column];
+            return result === undefined || result === null || result === "" ? fallback : result;
+        }
+
+        function formatHitPct(player) {
+            const raw = value(player, "Hit %");
+            const parsed = Number.parseFloat(raw);
+            return Number.isFinite(parsed) ? parsed.toFixed(3) : "N/A";
+        }
+
+        async function processPlayers() {
+            const pastedText = input.value.trim();
+            if (!pastedText) {
+                setStatus("Paste NCAA data or at least one player name.", "error");
+                return;
+            }
+
+            processButton.disabled = true;
+            setStatus("Detecting player names and searching current stats…");
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: pastedText })
+                });
+                const payload = await response.json();
+                if (!response.ok) throw new Error(payload.error || `API returned ${response.status}`);
+
+                if (!payload.results.length) {
+                    resultsData = [];
+                    document.getElementById("resultsSection").classList.remove("active");
+                    document.getElementById("statsSummary").style.display = "none";
+                    setStatus("No current players were recognized in the pasted text.", "error");
+                    return;
+                }
+
+                resultsData = payload.results.map((result, index) => {
+                    const transfer = parseInputLine(result.source_line || result.query, result.query);
+                    const stats = result.player;
+                    return {
+                        index: index + 1,
+                        name: result.query,
+                        pos: value(stats, "Pos"),
+                        yearsPlayed: result.years_played ?? "N/A",
+                        prevTeam: result.found ? value(stats, "Team") : "Not Found",
+                        newTeam: transfer.newInstitution,
+                        conference: transfer.conference,
+                        season: value(stats, "Season"),
+                        matches: value(stats, "Matches"),
+                        sets: value(stats, "Sets"),
+                        kills: value(stats, "Kills"),
+                        atkErr: value(stats, "Atk Err"),
+                        attacks: value(stats, "Atk"),
+                        hitPct: formatHitPct(stats),
+                        assists: value(stats, "Assists"),
+                        aces: value(stats, "Aces"),
+                        servErr: value(stats, "Serv Err"),
+                        digs: value(stats, "Digs"),
+                        totalBlk: value(stats, "Total Blk"),
+                        soloBlk: value(stats, "Solo Blk"),
+                        blkAst: value(stats, "Blk Ast"),
+                        blkErr: value(stats, "Blk Err"),
+                        bhErr: value(stats, "BH Err"),
+                        pts: value(stats, "PTS"),
+                        hometown: value(stats, "Hometown"),
+                        highSchool: value(stats, "High School"),
+                        found: result.found
+                    };
+                });
+
+                displayResults();
+                const found = resultsData.filter(player => player.found).length;
+                document.getElementById("totalPlayers").textContent = resultsData.length;
+                document.getElementById("foundPlayers").textContent = found;
+                document.getElementById("notFoundPlayers").textContent = resultsData.length - found;
+                document.getElementById("statsSummary").style.display = "flex";
+                document.getElementById("resultsSection").classList.add("active");
+                setStatus(`Found ${found.toLocaleString()} of ${resultsData.length.toLocaleString()} players.`, "success");
+            } catch (error) {
+                setStatus(`Search failed: ${error.message}`, "error");
+            } finally {
+                processButton.disabled = false;
+            }
+        }
+
+        function appendCell(row, text, className = "") {
+            const cell = document.createElement("td");
+            cell.textContent = text;
+            if (className) cell.className = className;
+            row.appendChild(cell);
+            return cell;
+        }
+
+        function displayResults() {
+            const body = document.getElementById("resultsTableBody");
+            body.replaceChildren();
+            resultsData.forEach(player => {
+                const row = document.createElement("tr");
+                if (!player.found) row.className = "not-found";
+                appendCell(row, player.index);
+                appendCell(row, player.name, "player-name");
+                appendCell(row, player.pos, "position");
+                appendCell(row, player.yearsPlayed, "stat-cell");
+                appendCell(row, player.prevTeam);
+                appendCell(row, "→", "arrow");
+                appendCell(row, player.newTeam || "—", "new-team");
+                appendCell(row, player.conference || "—");
+                ["season", "matches", "sets", "kills", "atkErr", "attacks", "hitPct", "assists", "aces", "servErr", "digs", "totalBlk", "soloBlk", "blkAst", "blkErr", "bhErr", "pts", "hometown", "highSchool"].forEach(key => appendCell(row, player[key], "stat-cell"));
+                const linkCell = document.createElement("td");
+                const link = document.createElement("a");
+                link.href = `https://evollve.net/stats/ncaa/women/indoor/volleyball/dig_in/player_single_seasons/?name=${encodeURIComponent(player.name)}`;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = "View";
+                linkCell.appendChild(link);
+                row.appendChild(linkCell);
+                body.appendChild(row);
+            });
+        }
+
+        function csvCell(value) {
+            return `"${String(value ?? "").replaceAll('"', '""')}"`;
+        }
+
+        function exportToCSV() {
+            if (!resultsData.length) {
+                setStatus("Search for players before exporting.", "error");
+                return;
+            }
+            const rows = resultsData.map(player => [
+                player.index, player.name, player.pos, player.yearsPlayed, player.prevTeam,
+                player.newTeam, player.conference, player.season, player.matches, player.sets,
+                player.kills, player.atkErr, player.attacks, player.hitPct, player.assists,
+                player.aces, player.servErr, player.digs, player.totalBlk, player.soloBlk,
+                player.blkAst, player.blkErr, player.bhErr, player.pts, player.hometown, player.highSchool
+            ]);
+            const csv = [CSV_HEADERS, ...rows].map(row => row.map(csvCell).join(",")).join("\r\n") + "\r\n";
+            const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `transfer_portal_stats_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            setStatus(`Exported ${resultsData.length.toLocaleString()} player rows.`, "success");
+        }
+
+        function clearAll() {
+            input.value = "";
+            resultsData = [];
+            document.getElementById("resultsSection").classList.remove("active");
+            document.getElementById("statsSummary").style.display = "none";
+            setStatus("");
+            input.focus();
+        }
+
+        processButton.addEventListener("click", processPlayers);
+        clearButton.addEventListener("click", clearAll);
+        exportButton.addEventListener("click", exportToCSV);
+    </script>
+</body>
+</html>
