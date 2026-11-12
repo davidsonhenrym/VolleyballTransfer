@@ -113,7 +113,7 @@
                 <label for="playerInput">Paste Player Names or Transfer Portal Rows</label>
                 <textarea id="playerInput" placeholder="Paste the copied NCAA table, transfer portal rows, or player names here..."></textarea>
                 <div class="help-text">
-                    Paste the complete copied NCAA block. Known player names are detected anywhere in each row; tab-separated institution and conference fields are retained when available.
+                    Paste the complete copied NCAA block. Every tab-separated athlete row is retained; players missing from the stats database are marked Not Found and remain in the CSV export.
                 </div>
                 <div class="button-group">
                     <button class="btn-primary" id="processButton" type="button">🔍 Search Players</button>
@@ -269,9 +269,9 @@
 
         function extractNames(data, text) {
             const found = [];
-            const seen = new Set();
             for (const sourceLine of text.split(/\r\n|[\n\r\v\f\x1c\x1d\x1e\x85\u{2028}\u{2029}]/u)) {
                 const words = normalizeName(sourceLine).split(" ").filter(Boolean);
+                const matchesOnLine = new Set();
                 let index = 0;
                 while (index < words.length) {
                     let match = null;
@@ -281,10 +281,10 @@
                         if (data.byName.has(candidate)) { match = candidate; break; }
                     }
                     if (match) {
-                        if (!seen.has(match)) {
+                        if (!matchesOnLine.has(match)) {
                             const player = searchPlayer(data, match);
                             found.push({ query: player.Player || match, source_line: sourceLine, player });
-                            seen.add(match);
+                            matchesOnLine.add(match);
                         }
                         index += match.split(" ").length;
                     } else index += 1;
@@ -293,13 +293,66 @@
             return found;
         }
 
+        function splitPastedLines(text) {
+            return text.split(/\r\n|[\n\r\v\f\x1c\x1d\x1e\x85\u{2028}\u{2029}]/u)
+                .filter(line => line.trim());
+        }
+
+        function parseNCAARows(text) {
+            const rows = [];
+            for (const sourceLine of splitPastedLines(text)) {
+                if (!sourceLine.includes("\t")) continue;
+                const columns = sourceLine.split("\t").map(value => value.trim()).filter(Boolean);
+                const sportIndex = columns.findIndex(value => /volleyball|women's/i.test(value));
+                if (columns.length < 4 || sportIndex < 0) continue;
+
+                const firstName = (columns[2] || "").replace(/\bMT\b/gi, "").replace(/\s+/g, " ").trim();
+                const lastName = (columns[3] || "").replace(/\s+/g, " ").trim();
+                const headerText = normalizeName(`${firstName} ${lastName}`);
+                if (!firstName || !lastName || /^(first name last name|first last|name name)$/.test(headerText)) continue;
+
+                rows.push({
+                    query: `${firstName} ${lastName}`.trim(),
+                    source_line: sourceLine
+                });
+            }
+            return rows;
+        }
+
+        function matchCandidate(data, candidate) {
+            const player = searchPlayer(data, candidate.query);
+            return {
+                ...candidate,
+                found: Boolean(player),
+                player,
+                years_played: player ? yearsPlayed(data, player.Player, player.Team) : null
+            };
+        }
+
+        function isLikelyHeader(line) {
+            const value = normalizeName(line);
+            return !value || /^(ncaa )?transfer portal( report)?$/.test(value) ||
+                /^(first name|last name|student name|player name|institution|conference|sport)$/.test(value);
+        }
+
         async function searchText(text) {
             const data = await loadData();
-            return extractNames(data, text).map(item => ({
-                ...item,
-                found: true,
+            const ncaaRows = parseNCAARows(text);
+            if (ncaaRows.length) return ncaaRows.map(candidate => matchCandidate(data, candidate));
+
+            const exactMatches = extractNames(data, text).map(item => ({
+                ...item, found: true,
                 years_played: yearsPlayed(data, item.player.Player, item.player.Team)
             }));
+            const matchedLines = new Set(exactMatches.map(item => item.source_line));
+            const unmatchedNameLines = splitPastedLines(text)
+                .filter(line => !matchedLines.has(line) && !isLikelyHeader(line))
+                .filter(line => {
+                    const count = normalizeName(line).split(" ").filter(Boolean).length;
+                    return count >= 2 && count <= 8;
+                })
+                .map(line => matchCandidate(data, { query: line.trim(), source_line: line }));
+            return [...exactMatches, ...unmatchedNameLines];
         }
 
         const CSV_HEADERS = ["#", "Player Name", "Pos", "Roster Seasons Found", "Previous Team", "Leaving From", "Conference", "Season", "Matches", "Sets", "Kills", "Atk Err", "Atk", "Hit %", "Assists", "Aces", "Serv Err", "Digs", "Total Blk", "Solo Blk", "Blk Ast", "Blk Err", "BH Err", "PTS", "Hometown", "High School"];
