@@ -77,12 +77,20 @@ def get_player_history(current_stats, rosters):
 def get_rosters():
     frames = []
     for s in range(SEASON, HISTORY_START_SEASON - 1, -1):
-        try:
-            frame = pd.read_csv(f"{ROSTER_BASE}rosters_{s}-{str(s + 1)[-2:]}.csv")
-            frame["_season"] = s
-            frames.append(frame)
-        except Exception as e:
-            print(f"Roster file for {s} unavailable: {e}")
+        # Upstream renamed rosters_2026-27.csv -> rosters_2026.csv on 2026-11-07; try both.
+        names = [f"rosters_{s}.csv", f"rosters_{s}-{str(s + 1)[-2:]}.csv"]
+        for name in names:
+            try:
+                frame = pd.read_csv(ROSTER_BASE + name)
+                frame["_season"] = s
+                frames.append(frame)
+                break
+            except Exception as e:
+                err = e
+        else:
+            print(f"Roster file for {s} unavailable ({' / '.join(names)}): {err}")
+    if not frames:
+        raise SystemExit(f"No roster files found under {ROSTER_BASE} -- did the upstream repo rename them again?")
     r = pd.concat(frames, ignore_index=True).drop_duplicates(["_season", "name", "team"])
     r["_key"] = r["name"].map(norm_name)
     return r
