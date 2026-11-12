@@ -74,4 +74,25 @@ const fiftyResults = fiftyCandidates.map(candidate => context.matchCandidate({
 assert.equal(fiftyResults.length, 50);
 assert.equal(fiftyResults.filter(result => result.found).length, 28);
 assert.equal(fiftyResults.filter(result => !result.found).length, 22);
-console.log("parser tests passed, including 50 pasted rows -> 28 matched + 22 not found");
+
+const realPlayers = context.parseCSV(
+    fs.readFileSync(path.join(__dirname, "..", "data", "all_players.csv"), "utf8")
+).records;
+const realByName = context.groupByName(realPlayers);
+const realRows = [...realByName.values()].map(rows => rows[0]).filter(row => row.Player.includes(" "));
+const realPaste = realRows.map(row => {
+    const firstSpace = row.Player.indexOf(" ");
+    const first = row.Player.slice(0, firstSpace);
+    const last = row.Player.slice(firstSpace + 1);
+    return `Entered\tMT\t${first}\t${last}\tSchool\tWomen's Volleyball\tNew School\tConference`;
+}).join("\n");
+const realCandidates = context.parseNCAARows(realPaste);
+const realResults = realCandidates.map(candidate => context.matchCandidate({
+    byName: realByName,
+    historyByName: new Map(),
+    nameLengths: []
+}, candidate));
+
+assert.equal(realCandidates.length, realRows.length, "every real database name should parse from an NCAA-style row");
+assert.equal(realResults.filter(result => result.found).length, realRows.length, "every real database name should match exactly");
+console.log(`parser tests passed: 50-row retention and ${realRows.length} real player names matched`);
