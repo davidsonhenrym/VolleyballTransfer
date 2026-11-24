@@ -355,7 +355,7 @@
             return [...exactMatches, ...unmatchedNameLines];
         }
 
-        const CSV_HEADERS = ["#", "Player Name", "Pos", "Roster Seasons Found", "Previous Team", "Leaving From", "Conference", "Season", "Matches", "Sets", "Kills", "Atk Err", "Atk", "Hit %", "Assists", "Aces", "Serv Err", "Digs", "Total Blk", "Solo Blk", "Blk Ast", "Blk Err", "BH Err", "PTS", "Hometown", "High School"];
+        const CSV_HEADERS = ["Sets", "Matches", "Assists", "Kills", "Hit %", "Aces", "Digs", "Total Blks", "PTS"];
         let resultsData = [];
 
         const input = document.getElementById("playerInput");
@@ -500,18 +500,26 @@
             return `"${String(value ?? "").replaceAll('"', '""')}"`;
         }
 
+        function exportRow(player) {
+            return [
+                player.sets,
+                player.matches,
+                player.assists,
+                player.kills,
+                player.hitPct,
+                player.aces,
+                player.digs,
+                player.totalBlk,
+                player.pts
+            ];
+        }
+
         function exportToCSV() {
             if (!resultsData.length) {
                 setStatus("Search for players before exporting.", "error");
                 return;
             }
-            const rows = resultsData.map(player => [
-                player.index, player.name, player.pos, player.yearsPlayed, player.prevTeam,
-                player.newTeam, player.conference, player.season, player.matches, player.sets,
-                player.kills, player.atkErr, player.attacks, player.hitPct, player.assists,
-                player.aces, player.servErr, player.digs, player.totalBlk, player.soloBlk,
-                player.blkAst, player.blkErr, player.bhErr, player.pts, player.hometown, player.highSchool
-            ]);
+            const rows = resultsData.map(exportRow);
             const csv = [CSV_HEADERS, ...rows].map(row => row.map(csvCell).join(",")).join("\r\n") + "\r\n";
             const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
             const link = document.createElement("a");

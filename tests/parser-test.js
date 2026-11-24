@@ -95,4 +95,19 @@ const realResults = realCandidates.map(candidate => context.matchCandidate({
 
 assert.equal(realCandidates.length, realRows.length, "every real database name should parse from an NCAA-style row");
 assert.equal(realResults.filter(result => result.found).length, realRows.length, "every real database name should match exactly");
+
+const exportHeaders = vm.runInContext("CSV_HEADERS", context);
+assert.deepEqual(
+    Array.from(exportHeaders),
+    ["Sets", "Matches", "Assists", "Kills", "Hit %", "Aces", "Digs", "Total Blks", "PTS"],
+    "CSV headers must match the coach's master spreadsheet"
+);
+assert.deepEqual(
+    Array.from(context.exportRow({
+        sets: "10", matches: "3", assists: "8", kills: "20", hitPct: ".250",
+        aces: "4", digs: "12", totalBlk: "6", pts: "27"
+    })),
+    ["10", "3", "8", "20", ".250", "4", "12", "6", "27"],
+    "CSV values must use the coach's requested order"
+);
 console.log(`parser tests passed: 50-row retention and ${realRows.length} real player names matched`);
